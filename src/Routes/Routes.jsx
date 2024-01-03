@@ -5,34 +5,39 @@ import MyProduct from "../Layout/MyProduct/MyProduct";
 import Details from "../Layout/DetailsPage/Details";
 import Login from "../Pages/Login";
 import Register from "../Pages/Register";
+import PrivateRoute from "../Components/PrivateRoute/privateRoute";
 
 const router = createBrowserRouter([
-    {
-        path : '/',
-        element : <Root/>,
-        children : [
-            {
-                path : '/',
-                element : <Home/>
-            },
-            {
-                path : 'myproduct',
-                element : <MyProduct/>
-            },
-            {
-                path : 'details',
-                element : <Details/>
-            },
-            {
-                path : 'login',
-                element : <Login/>
-            },
-            {
-                path : 'register',
-                element : <Register/>
-            },
-        ]
-    }
-])
+  {
+    path: "/",
+    element: <Root />,
+    children: [
+      {
+        path: "/",
+        element: (
+          <PrivateRoute>
+            <Home />
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: "myproduct",
+        element: <MyProduct />,
+      },
+      {
+        path: "details",
+        element: <Details />,
+      },
+      {
+        path: "login",
+        element: <Login />,
+      },
+      {
+        path: "register",
+        element: <Register />,
+      },
+    ],
+  },
+]);
 
-export default router
+export default router;
