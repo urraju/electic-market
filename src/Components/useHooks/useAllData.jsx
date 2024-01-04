@@ -11,6 +11,7 @@ const useAllData = () => {
   } = useQuery({
     queryKey: ["products"],
     queryFn: async () => {
+      console.log('data');
       const res = await axiosPublic.get("/products");
 
       return res.data;

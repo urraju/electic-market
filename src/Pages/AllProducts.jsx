@@ -1,21 +1,48 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import useAllData from "../Components/useHooks/useAllData";
 import ProductsCard from "./ProductsCard";
+import useAxiosPublic from "../Components/useHooks/useAxiosPublic";
+import { useQuery } from "@tanstack/react-query";
 
 const AllProducts = () => {
-  const [products, refetch] = useAllData();
-  console.log(products);
+  const [products, refetch ] = useAllData();
+  const [sorting, setSorting] = useState([]);
   const [displayCards, setDisplayCards] = useState([...products]);
-  const [search, setSearch] = useState([...products]);
-  
-  const handleSearch = (e) => {
+  const [search, setSearch] = useState(...[products]);
+  const [count, setcount] = useState(null);
+  const [perPage, setPerPage] = useState(10);
+  const [currentPage, setCurrentPage] = useState(0);
+  const axiosPublic = useAxiosPublic();
+
+ const handleSearch = (e) => {
     let input = e.target.value.toLowerCase();
     const searchCards = search.filter((card) =>
       card.name.toLowerCase().startsWith(input)
     );
     setDisplayCards(searchCards);
   };
-  const [sorting, setSorting] = useState([]);
+
+  useEffect(() => {
+    fetch("http://localhost:3000/productsCount")
+      .then((res) => res.json())
+      .then((count) => setcount(count.count));
+  }, []);
+
+  const numberOfPage = Math.ceil(count / perPage);
+  const pages = [...Array(numberOfPage).keys()];
+
+  const {
+    data: product = [] } = useQuery({
+    queryKey: ["product", search, perPage, currentPage],
+    queryFn: async () => {
+      const res = await axiosPublic.get(
+        `/products?page=${currentPage}&size=${perPage}`
+      );
+      setDisplayCards(res.data);
+      return res.data;
+    },
+  });
+
   const handleSorting = (e) => {
     setSorting(e.target.value);
   };
@@ -25,8 +52,18 @@ const AllProducts = () => {
     displayCards.sort((a, b) => a.price - b.price);
   }
 
+  const handlePage = (e) => {
+    const valu = parseInt(e.target.value);
+    console.log(valu);
+    setPerPage(valu);
+    setCurrentPage(0);
+    refetch();
+  };
+
+
   return (
     <div className="px-2 md:px-5 my-20">
+      
         {/* heading tilte  */}
       <div className="text-center">
         <h1 className="capitalize font-inter font-bold text-4xl ">
@@ -74,9 +111,36 @@ const AllProducts = () => {
       </div>
 
       <div className="max-w-screen-2xl mt-10 mx-auto grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-3">
-        {displayCards.map((product) => (
+        {displayCards?.map((product) => (
           <ProductsCard key={product._id} data={product} refetch={refetch} />
         ))}
+      </div>
+
+      <div className="flex items-center gap-2 mt-10 justify-center">
+        {pages.map((page) => (
+          <button
+            onClick={() => setCurrentPage(page)}
+            className={
+              currentPage === page
+                ? "h-8 w-8 text-white bg-orange-500 border border-orange-500 rounded-full"
+                : "h-8 w-8  border-r border-info rounded-full"
+            }
+          >
+            {page}
+          </button>
+        ))}
+        <select
+          onChange={handlePage}
+          value={perPage}
+          className="h-7 w-14 bg-orange-500  text-white px-2  border-l rounded-full  border-orange-500"
+          name=""
+          id=""
+        >
+          <option value="5">5</option>
+          <option value="10">10</option>
+          <option value="20">20</option>
+          <option value="50">50</option>
+        </select>
       </div>
     </div>
   );

@@ -2,7 +2,8 @@ import { useQuery } from "@tanstack/react-query";
 import useAuth from "../../Components/useHooks/useAuth";
 import useAxiosPublic from "../../Components/useHooks/useAxiosPublic";
 import { Link } from "react-router-dom";
-import { data } from "autoprefixer";
+import { FaTrash } from "react-icons/fa";
+import Swal from "sweetalert2";
 
 const MyProduct = () => {
   const { user } = useAuth();
@@ -14,7 +15,38 @@ const MyProduct = () => {
       return res.data;
     },
   });
-  console.log(userProduct);
+  
+  const totalPrice = userProduct.reduce((pre,curr) => pre + parseInt(curr.price),0)
+  const parint = parseInt(totalPrice)
+  console.log(parint);
+
+  const handleDeleted = (id) => {
+    
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        axiosPublic.delete(`/userProduct/${id}`).then((res) => {
+          console.log(res.data);
+          if (res.data.deletedCount > 0) {
+            Swal.fire({
+              title: "Deleted!",
+              text: "Your file has been deleted.",
+              icon: "success",
+            });
+            refetch()
+          }
+        });
+      }
+    });
+  }
+ 
   return (
     <div className="px-2 md:px-5 my-10">
       <div className="max-w-screen-2xl mx-auto">
@@ -23,10 +55,11 @@ const MyProduct = () => {
              Quantity : {userProduct.length}
           </p>
           <p className="text-lg border border-cyan-100 font-semibold text-teal-500 rounded px-3   py-1  ">
-            Total Price : {}
+            Total Price : {parint.toFixed(2)}
           </p>
         </div>
-        <table className="table">
+       <div className="overflow-x-scroll">
+       <table className="table">
           {/* head */}
           <thead>
             <tr className="bg-orange-200 ">
@@ -36,6 +69,7 @@ const MyProduct = () => {
               <th className="uppercase font-lexend font-bold">Brand</th>
               <th className="uppercase font-lexend font-bold">Price</th>
               <th className="uppercase font-lexend font-bold">See Details</th>
+              <th className="uppercase font-lexend font-bold">Delete</th>
             </tr>
           </thead>
           <tbody>
@@ -68,10 +102,14 @@ const MyProduct = () => {
                     </button>
                   </Link>
                 </td>
+                <td>
+                  <button onClick={() => handleDeleted(product._id)}><FaTrash className="w-7 h-7 bg-red-200 text-red-500 rounded-full p-2"/></button>
+                  </td> 
               </tr>
             ))}
           </tbody>
         </table>
+       </div>
       </div>
     </div>
   );

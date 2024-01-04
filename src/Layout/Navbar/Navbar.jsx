@@ -40,11 +40,11 @@ const navigate = useNavigate();
                   aria-label="close sidebar"
                   className="drawer-overlay"
                 ></label>
-                <ul className="menu p-4 z-30 w-[100%] md:w-[60%] flex-col gap-2 min-h-full bg-gradient-to-l   text-white text-sm">
+                <ul className="menu p-4 z-30 w-[100%] md:w-[60%] flex-col gap-2 min-h-full  backdrop-blur bg-black/30  text-white text-sm">
                   {user ? (
                     <>
                       <div className="flex gap-5   items-center  justify-center">
-                        <div className=" border border-orange-500  backdrop-blur bg-white/30 rounded-[50%] w-[40px] h-[40px]">
+                        <div className=" border border-orange-500  rounded-[50%] w-[40px] h-[40px]">
                           <img
                             src={user.photoURL}
                             title={user.email}
@@ -63,7 +63,7 @@ const navigate = useNavigate();
                         Home
                       </Link>
                       <Link
-                        to="/allProducts"
+                        to="/myproduct"
                         className="py-1 px-5 border-orange-500 border-opacity-40  border text-center hover:bg-orange-500 rounded"
                       >
                          My Products
