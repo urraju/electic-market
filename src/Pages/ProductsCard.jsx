@@ -16,9 +16,7 @@ const ProductsCard = ({ data }) => {
         <img className="w-40 mx-auto" src={photo} alt="" />
 
         <div className="absolute bottom-3 w-full">
-          <p className="bg-orange-500 text-white w-max px-2 border-dotted border-l-2 border-r-2 absolute right-5 -top-8 ">
-            20% off
-          </p>
+           
           <p className="text-xl font-semibold capitalize">{name}</p>
 
           <p className="mt-2">

@@ -55,7 +55,7 @@ const MyProduct = () => {
              Quantity : {userProduct.length}
           </p>
           <p className="text-lg border border-cyan-100 font-semibold text-teal-500 rounded px-3   py-1  ">
-            Total Price : {parint.toFixed(2)}
+            Total Price : {parint.toFixed(2)} Tk
           </p>
         </div>
        <div className="overflow-x-scroll">

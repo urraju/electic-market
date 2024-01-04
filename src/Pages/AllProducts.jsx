@@ -23,7 +23,7 @@ const AllProducts = () => {
   };
 
   useEffect(() => {
-    fetch("http://localhost:3000/productsCount")
+    fetch("https://electic-server.vercel.app/productsCount")
       .then((res) => res.json())
       .then((count) => setcount(count.count));
   }, []);
@@ -110,11 +110,13 @@ const AllProducts = () => {
         </select>
       </div>
 
+      {displayCards.length  === 0 ?  <p className="text-lg text-center   mt-2 font-inter capitalize text-teal-500 border rounded p-1">Please Go to Details Page Or My Product Page and back home Search Again</p> : 
       <div className="max-w-screen-2xl mt-10 mx-auto grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-3">
-        {displayCards?.map((product) => (
-          <ProductsCard key={product._id} data={product} refetch={refetch} />
-        ))}
-      </div>
+      {displayCards?.map((product) => (
+        <ProductsCard key={product._id} data={product} refetch={refetch} />
+      ))}
+    </div>
+      }
 
       <div className="flex items-center gap-2 mt-10 justify-center">
         {pages.map((page) => (
